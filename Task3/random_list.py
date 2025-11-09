@@ -2,10 +2,12 @@
 
 from random import randint
 
-def random_list() -> list[int]:
+from is_prime import UPPER_BOUND
+
+def random_list(length=1_000_000, upper_bound=UPPER_BOUND) -> list[int]:
     randoms = []
-    for i in range(1_000_000):
-        randoms.append(randint(1, 10_000_000))
+    for i in range(length):
+        randoms.append(randint(1, upper_bound))
     return randoms
 
 def main():
