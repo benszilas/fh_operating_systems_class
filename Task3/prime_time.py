@@ -5,6 +5,15 @@ import threading
 import argparse
 import multiprocessing
 import sys
+import os
+try:
+    if os.getenv("SKIP_NUMPY"):
+        np = None
+    else:
+        import numpy as np
+except Exception:
+    # NumPy not available or broken — fall back gracefully
+    np = None
 
 # local
 from is_prime import is_prime, is_prime_miller_rabin, sieve_of_eratosthenes, UPPER_BOUND
@@ -45,7 +54,7 @@ class PrimeCounter:
         self.lock = threading.Lock()
         self.threads = arguments.threads
 
-        if arguments.datatype == "array":
+        if arguments.datatype == "array" and np is not None:
             self.randomlist = random_array(upper_bound=UPPER_BOUND)
             print(f"generated a Numpy array with random integers between 1 - {UPPER_BOUND}")
 
