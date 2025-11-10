@@ -16,6 +16,7 @@ def is_prime(n):
 
 
 def is_prime_miller_rabin(n):
+    n = int(n) # to be compatible with numpy integer types
     if n < 2:
         return False
     for p in (2, 3, 5, 7, 11, 13, 17, 19, 23, 29, 31, 37):
