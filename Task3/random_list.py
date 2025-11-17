@@ -1,12 +1,8 @@
 #!/usr/bin/python3
 
-import os
 from random import randint
 try:
-    if os.getenv("SKIP_NUMPY"):
-        np = None
-    else:
-        import numpy as np
+    import numpy as np
 except Exception:
     # NumPy not available or broken — fall back gracefully
     np = None
