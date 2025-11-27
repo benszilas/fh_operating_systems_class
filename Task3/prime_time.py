@@ -24,7 +24,10 @@ def parse_arguments() -> argparse.Namespace:
         '--datatype', '-d',
         choices=['list','array','tuple'],
         default='list',
-        help=f'store the prime numbers in this data type '
+        help=f"""
+          store the prime numbers in this data type
+          array option needs the Numpy package
+        """
     )
 
     parser.add_argument(
