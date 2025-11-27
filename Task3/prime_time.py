@@ -8,7 +8,7 @@ import sys
 # local
 from is_prime import is_prime_miller_rabin, sieve_of_eratosthenes, UPPER_BOUND
 from prime_counter import PrimeCounter
-
+from random_list import DEFAULT_LENGTH
 
 def parse_arguments() -> argparse.Namespace:
     parser = argparse.ArgumentParser(
@@ -34,6 +34,12 @@ def parse_arguments() -> argparse.Namespace:
         help=f'limit the number of threads lower than {multiprocessing.cpu_count()} '
     )
 
+    parser.add_argument(
+        '--length', '-l',
+        type=int,
+        default=DEFAULT_LENGTH,
+        help=f'total random numbers generated, defaults to {DEFAULT_LENGTH}'
+    )
     return parser.parse_args()
 
 

@@ -1,25 +1,23 @@
 #!/usr/bin/python3
+DEFAULT_LENGTH = 1_000_000
 
 from random import randint
 try:
     import numpy as np
 except Exception:
-    # NumPy not available or broken — fall back gracefully
+    # NumPy not available or broken
     np = None
-
 
 from is_prime import UPPER_BOUND
 
-
-
-def random_list(length=1_000_000, upper_bound=UPPER_BOUND) -> list[int]:
+def random_list(length=DEFAULT_LENGTH, upper_bound=UPPER_BOUND) -> list[int]:
     randoms = []
     for i in range(length):
         randoms.append(randint(1, upper_bound))
     return randoms
 
 
-def random_tuple(length=1_000_000, upper_bound=UPPER_BOUND) -> tuple[int]:
+def random_tuple(length=DEFAULT_LENGTH, upper_bound=UPPER_BOUND) -> tuple[int]:
     return tuple(random_list(length, upper_bound))
 
 
@@ -30,7 +28,7 @@ def list_to_array(number_list: list[int]):
         return None
 
 
-def random_array(length=1_000_000, upper_bound=UPPER_BOUND):
+def random_array(length=DEFAULT_LENGTH, upper_bound=UPPER_BOUND):
     if np:
         return np.random.randint(1, upper_bound + 1, size=length)
     else:

@@ -1,8 +1,9 @@
 import threading
+import sys
 try:
     import numpy as np
 except Exception:
-    # NumPy not available or broken — fall back gracefully
+    # NumPy not available or broken
     np = None
 
 from is_prime import is_prime, UPPER_BOUND
@@ -14,17 +15,18 @@ class PrimeCounter:
         self.result = 0
         self.lock = threading.Lock()
         self.threads = arguments.threads
+        self.length = arguments.length
 
         if arguments.datatype == "array" and np is not None:
-            self.randomlist = random_array(upper_bound=UPPER_BOUND)
+            self.randomlist = random_array(length=self.length, upper_bound=UPPER_BOUND)
             print(f"generated a Numpy array with random integers between 1 - {UPPER_BOUND}")
 
         elif arguments.datatype == "tuple":
-            self.randomlist = random_tuple(upper_bound=UPPER_BOUND)
+            self.randomlist = random_tuple(length=self.length, upper_bound=UPPER_BOUND)
             print(f"generated a tuple with random integers between 1 - {UPPER_BOUND}")
 
         elif arguments.datatype == "list":
-            self.randomlist = random_list(upper_bound=UPPER_BOUND)
+            self.randomlist = random_list(length=self.length, upper_bound=UPPER_BOUND)
             print(f"generated python list with random integers between 1 - {UPPER_BOUND}")
 
         else:
