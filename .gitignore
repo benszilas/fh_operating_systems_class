@@ -1,8 +1,5 @@
 #pthon cache
 __pycache__
 
-#CUDA keyring-package
-cuda-keyring_1.1-1_all.deb
-
-# CUDA run analysis
-*nsys_easy*
+# scv files
+*.csv
