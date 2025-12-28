@@ -57,7 +57,7 @@ def create_output_file(input_filename: Path) -> io.TextIOWrapper:
         output_filename = Path(parent_dir, output_file_range + ".csv")
 
         # open for writing, and set permission 600 using stat and bitwise or
-        output_file = open(output_filename, mode="w", encoding=str)
+        output_file = open(output_filename, mode="w", encoding="UTF-8")
         os.chmod(output_filename, stat.S_IWUSR | stat.S_IRUSR)
     except Exception as e:
         raise RuntimeError(
@@ -75,7 +75,7 @@ def thread_routine(filename: Path):
     """
     filepath = Path(__file__).resolve().parent
     try:
-        with open(filename, encoding=str) as input_file:
+        with open(filename, encoding="UTF-8") as input_file:
             output_file = create_output_file(filename)
             output_list: list[int] = []
             for line in input_file:
@@ -117,7 +117,7 @@ def thread_routine(filename: Path):
 def main():
     """
     declare .csv input files
-    
+
     spawn and join threads
     """
     # create Path objects with the file names
