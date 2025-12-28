@@ -59,7 +59,7 @@ def create_output_file(input_filename: Path) -> io.TextIOWrapper:
         # open for writing, and set permission 600 using stat and bitwise or
         output_file = open(output_filename, mode="w", encoding="UTF-8")
         os.chmod(output_filename, stat.S_IWUSR | stat.S_IRUSR)
-    except Exception as e:
+    except (ValueError, OSError) as e:
         raise RuntimeError(
             f"error creating output file: {e} in thread {threading.current_thread()}"
         ) from e
@@ -110,7 +110,7 @@ def thread_routine(filename: Path):
             for number in output_list:
                 print(number, file=output_file)
 
-    except Exception as e:
+    except (OSError, RuntimeError, subprocess.CalledProcessError, ValueError) as e:
         print(f"error in thread {threading.current_thread().name}: {e}")
 
 
@@ -137,7 +137,7 @@ def main():
             spawned_thread = threading.Thread(target=thread_routine, args=(files[i],))
             threads.append(spawned_thread)
             spawned_thread.start()
-        except Exception as e:
+        except RuntimeError as e:
             print(f"error spawning thread {i}: {e}")
 
     for thread in threads:
