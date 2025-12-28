@@ -9,6 +9,14 @@ semaphore = threading.Semaphore(2)
 
 
 def is_prime(n: int) -> bool:
+    """
+    tests if a number is prime
+
+    :param n: the integer to test
+    :type n: int
+    :return: true if prime
+    :rtype: bool
+    """
     # base cases 0-3
     if n <= 1:
         return False
@@ -49,12 +57,12 @@ def create_output_file(input_filename: Path) -> io.TextIOWrapper:
         output_filename = Path(parent_dir, output_file_range + ".csv")
 
         # open for writing, and set permission 600 using stat and bitwise or
-        output_file = open(output_filename, mode="w")
+        output_file = open(output_filename, mode="w", encoding=str)
         os.chmod(output_filename, stat.S_IWUSR | stat.S_IRUSR)
     except Exception as e:
-        raise Exception(
+        raise RuntimeError(
             f"error creating output file: {e} in thread {threading.current_thread()}"
-        )
+        ) from e
     return output_file
 
 
@@ -67,7 +75,7 @@ def thread_routine(filename: Path):
     """
     filepath = Path(__file__).resolve().parent
     try:
-        with open(filename) as input_file:
+        with open(filename, encoding=str) as input_file:
             output_file = create_output_file(filename)
             output_list: list[int] = []
             for line in input_file:
@@ -76,7 +84,8 @@ def thread_routine(filename: Path):
                     input_number = int(line)
                 except ValueError as e:
                     # catch value error per line, just in case the input file is malformated somehow
-                    # input_number for this line will stay None to skip the primality test and calc.sh script
+                    # input_number for this line will stay None
+                    # to skip the primality test and calc.sh script
                     # continue parsing the rest of the file
                     print(f"error reading {line=} from {filename=}: {e}")
 
@@ -84,12 +93,13 @@ def thread_routine(filename: Path):
                 # if an error happens in the subprocess, print it and stop parsing the file
                 # capture output to read from the stdout of calc.sh script
                 if input_number is not None and is_prime(input_number):
-                    # aquire semaphore to make sure no more than 2 threads run the calc.sh script at the same time
+                    # aquire semaphore to make sure no more than 2 threads run the calc.sh script
                     # use context management to release the semaphore if an exception occurs
                     with semaphore:
                         process = subprocess.run(
                             args=[Path(filepath, "calc.sh"), str(input_number)],
                             capture_output=True,
+                            check=True,
                         )
                     result = int(process.stdout)
                     if is_prime(result):
@@ -105,6 +115,11 @@ def thread_routine(filename: Path):
 
 
 def main():
+    """
+    declare .csv input files
+    
+    spawn and join threads
+    """
     # create Path objects with the file names
     filepath = Path(__file__).resolve().parent
     files = [
